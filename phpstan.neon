@@ -1,0 +1,55 @@
+parameters:
+	level: 9
+	paths:
+		- src
+	editorUrl: 'file://%%file%%'
+	ignoreErrors:
+		-
+			message: "#^Constant WebChemistry\\\\Stocks\\\\Enum\\\\PeriodEnum\\:\\:ANNUAL is unused\\.$#"
+			count: 1
+			path: src/Enum/PeriodEnum.php
+
+		-
+			message: "#^Constant WebChemistry\\\\Stocks\\\\Enum\\\\PeriodEnum\\:\\:QUARTER is unused\\.$#"
+			count: 1
+			path: src/Enum/PeriodEnum.php
+
+		-
+			message: "#^Constant WebChemistry\\\\Stocks\\\\Enum\\\\TickerTypeEnum\\:\\:COMMODITY is unused\\.$#"
+			count: 1
+			path: src/Enum/TickerTypeEnum.php
+
+		-
+			message: "#^Constant WebChemistry\\\\Stocks\\\\Enum\\\\TickerTypeEnum\\:\\:CRYPTO is unused\\.$#"
+			count: 1
+			path: src/Enum/TickerTypeEnum.php
+
+		-
+			message: "#^Constant WebChemistry\\\\Stocks\\\\Enum\\\\TickerTypeEnum\\:\\:ETF is unused\\.$#"
+			count: 1
+			path: src/Enum/TickerTypeEnum.php
+
+		-
+			message: "#^Constant WebChemistry\\\\Stocks\\\\Enum\\\\TickerTypeEnum\\:\\:FUND is unused\\.$#"
+			count: 1
+			path: src/Enum/TickerTypeEnum.php
+
+		-
+			message: "#^Constant WebChemistry\\\\Stocks\\\\Enum\\\\TickerTypeEnum\\:\\:INDEX is unused\\.$#"
+			count: 1
+			path: src/Enum/TickerTypeEnum.php
+
+		-
+			message: "#^Constant WebChemistry\\\\Stocks\\\\Enum\\\\TickerTypeEnum\\:\\:STOCK is unused\\.$#"
+			count: 1
+			path: src/Enum/TickerTypeEnum.php
+
+		-
+			message: "#^Method WebChemistry\\\\Stocks\\\\FmpStockClient\\:\\:realtimePrices\\(\\) should return WebChemistry\\\\Stocks\\\\Collection\\\\SymbolCollection\\<WebChemistry\\\\Stocks\\\\Result\\\\RealtimePriceInterface\\> but returns WebChemistry\\\\Stocks\\\\Collection\\\\SymbolCollection\\<WebChemistry\\\\Stocks\\\\Result\\\\Fmp\\\\RealtimePrice\\>\\.$#"
+			count: 1
+			path: src/FmpStockClient.php
+
+		-
+			message: "#^Method WebChemistry\\\\Stocks\\\\FmpStockClient\\:\\:symbolList\\(\\) should return WebChemistry\\\\Stocks\\\\Collection\\\\SymbolCollection\\<WebChemistry\\\\Stocks\\\\Result\\\\SymbolInterface\\> but returns WebChemistry\\\\Stocks\\\\Collection\\\\SymbolCollection\\<WebChemistry\\\\Stocks\\\\Result\\\\Fmp\\\\Symbol\\>\\.$#"
+			count: 1
+			path: src/FmpStockClient.php
