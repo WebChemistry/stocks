@@ -105,7 +105,7 @@ final class FmpStockClient implements StockClientInterface
 		);
 		$commodities = MapperHelper::mapWithSymbolKey(
 			fn (array $data) => Symbol::createFromCommodity($data),
-			$this->request($this->createUrl('symbol/available-commodities'))
+			$this->request($this->createUrl('quotes/commodity'))
 		);
 
 		return new SymbolCollection(array_merge($stocks, $indexes, $cryptos, $commodities));
