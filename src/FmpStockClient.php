@@ -150,6 +150,19 @@ final class FmpStockClient implements StockClientInterface
 	}
 
 	/**
+	 * @see https://site.financialmodelingprep.com/developer/docs#Company-Quote
+	 * @param string[] $symbols
+	 * @return SymbolCollection<Quote>
+	 * @throws StockClientNoDataException
+	 */
+	public function quotes(array $symbols): SymbolCollection
+	{
+		$data = $this->request($this->createUrl('quote', $symbols));
+
+		return MapperHelper::mapToCollection(Quote::class, $data);
+	}
+
+	/**
 	 * @param string[]|string $symbols
 	 */
 	private function createUrl(
