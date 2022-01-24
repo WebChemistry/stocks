@@ -7,7 +7,6 @@ use WebChemistry\Stocks\Enum\PeriodEnum;
 use WebChemistry\Stocks\Period\DateTimeRange;
 use WebChemistry\Stocks\Period\StockPeriod;
 use WebChemistry\Stocks\Result\FinancialInterface;
-use WebChemistry\Stocks\Result\Fmp\Symbol;
 use WebChemistry\Stocks\Result\HistoricalPriceInterface;
 use WebChemistry\Stocks\Result\QuoteInterface;
 use WebChemistry\Stocks\Result\RealtimePriceInterface;
