@@ -20,7 +20,7 @@ final class HistoricalPrice implements HistoricalPriceInterface
 
 	public function getPrice(): float
 	{
-		return ArrayTypeAssert::float($this->data, 'c');
+		return ArrayTypeAssert::floatish($this->data, 'c');
 	}
 
 	public function getDate(): DateTimeImmutable

@@ -24,7 +24,7 @@ final class RealtimePrice implements RealtimePriceInterface
 
 	public function getPrice(): float
 	{
-		return ArrayTypeAssert::float($this->data, 'price');
+		return ArrayTypeAssert::floatish($this->data, 'price');
 	}
 
 	public function getVolume(): int

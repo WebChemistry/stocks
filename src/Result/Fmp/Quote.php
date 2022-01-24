@@ -29,27 +29,27 @@ final class Quote implements QuoteInterface
 
 	public function getChange(): float
 	{
-		return ArrayTypeAssert::numericFloat($this->data, 'change');
+		return ArrayTypeAssert::floatish($this->data, 'change');
 	}
 
 	public function getChangePercentage(): float
 	{
-		return ArrayTypeAssert::numericFloat($this->data, 'changesPercentage');
+		return ArrayTypeAssert::floatish($this->data, 'changesPercentage');
 	}
 
 	public function getPrice(): float
 	{
-		return ArrayTypeAssert::numericFloat($this->data, 'price');
+		return ArrayTypeAssert::floatish($this->data, 'price');
 	}
 
 	public function getOpen(): float
 	{
-		return ArrayTypeAssert::numericFloat($this->data, 'open');
+		return ArrayTypeAssert::floatish($this->data, 'open');
 	}
 
 	public function getPreviousClose(): float
 	{
-		return ArrayTypeAssert::numericFloat($this->data, 'previousClose');
+		return ArrayTypeAssert::floatish($this->data, 'previousClose');
 	}
 
 }
