@@ -5,7 +5,7 @@ namespace WebChemistry\Stocks\Regex;
 final class TickerRegex
 {
 
-	private const PATTERN = '(?:\^)?[a-zA-Z0-9._&-]*[a-zA-Z0-9]';
+	private const PATTERN = '(?:\^)?[a-zA-Z0-9._&=-]*[a-zA-Z0-9]';
 
 	public static function match(string $ticker): bool
 	{
