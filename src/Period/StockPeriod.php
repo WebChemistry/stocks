@@ -8,7 +8,7 @@ use Nette\Utils\Strings;
 final class StockPeriod
 {
 
-	private const MAP = ['minute', 'minutes', 'day', 'days', 'month', 'months', 'year', 'years'];
+	private const MAP = ['minute', 'minutes', 'hour', 'hours', 'day', 'days', 'week', 'weeks', 'month', 'months', 'year', 'years'];
 
 	private int $number;
 
@@ -33,9 +33,19 @@ final class StockPeriod
 		return str_starts_with($this->period, 'month');
 	}
 
+	public function isWeekly(): bool
+	{
+		return str_starts_with($this->period, 'week');
+	}
+
 	public function isDaily(): bool
 	{
 		return str_starts_with($this->period, 'day');
+	}
+
+	public function isHourly(): bool
+	{
+		return str_starts_with($this->period, 'hour');
 	}
 
 	public function isYearly(): bool
