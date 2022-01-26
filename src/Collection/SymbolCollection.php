@@ -3,6 +3,7 @@
 namespace WebChemistry\Stocks\Collection;
 
 use ArrayIterator;
+use Countable;
 use IteratorAggregate;
 use OutOfBoundsException;
 
@@ -10,7 +11,7 @@ use OutOfBoundsException;
  * @template T of object
  * @implements IteratorAggregate<string, T>
  */
-final class SymbolCollection implements IteratorAggregate
+final class SymbolCollection implements IteratorAggregate, Countable
 {
 
 	/**
@@ -60,6 +61,11 @@ final class SymbolCollection implements IteratorAggregate
 	public function getAll(): array
 	{
 		return $this->collection;
+	}
+
+	public function count(): int
+	{
+		return count($this->collection);
 	}
 
 }
