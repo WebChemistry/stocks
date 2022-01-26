@@ -15,4 +15,9 @@ interface SymbolInterface
 
 	public function getType(): TickerTypeEnum;
 
+	/**
+	 * @return mixed[]
+	 */
+	public function toArray(): array;
+
 }

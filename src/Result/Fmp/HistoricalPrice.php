@@ -4,19 +4,11 @@ namespace WebChemistry\Stocks\Result\Fmp;
 
 use DateTimeImmutable;
 use Utilitte\Asserts\ArrayTypeAssert;
+use WebChemistry\Stocks\Result\ArrayResult;
 use WebChemistry\Stocks\Result\HistoricalPriceInterface;
 
-final class HistoricalPrice implements HistoricalPriceInterface
+final class HistoricalPrice extends ArrayResult implements HistoricalPriceInterface
 {
-
-	/**
-	 * @param mixed[] $data
-	 */
-	public function __construct(
-		private array $data,
-	)
-	{
-	}
 
 	public function getPrice(): float
 	{

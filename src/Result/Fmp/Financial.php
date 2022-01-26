@@ -3,19 +3,11 @@
 namespace WebChemistry\Stocks\Result\Fmp;
 
 use Utilitte\Asserts\TypeAssert;
+use WebChemistry\Stocks\Result\ArrayResult;
 use WebChemistry\Stocks\Result\FinancialInterface;
 
-final class Financial implements FinancialInterface
+final class Financial extends ArrayResult implements FinancialInterface
 {
-
-	/**
-	 * @param mixed[] $data
-	 */
-	public function __construct(
-		private array $data,
-	)
-	{
-	}
 
 	public function getEbitda(): ?int
 	{

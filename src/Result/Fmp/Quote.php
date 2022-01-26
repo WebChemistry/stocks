@@ -3,19 +3,11 @@
 namespace WebChemistry\Stocks\Result\Fmp;
 
 use Utilitte\Asserts\ArrayTypeAssert;
+use WebChemistry\Stocks\Result\ArrayResult;
 use WebChemistry\Stocks\Result\QuoteInterface;
 
-final class Quote implements QuoteInterface
+final class Quote extends ArrayResult implements QuoteInterface
 {
-
-	/**
-	 * @param mixed[] $data
-	 */
-	public function __construct(
-		private array $data,
-	)
-	{
-	}
 
 	public function getSymbol(): string
 	{

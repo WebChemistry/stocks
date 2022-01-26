@@ -19,4 +19,9 @@ interface QuoteInterface
 
 	public function getPreviousClose(): float;
 
+	/**
+	 * @return mixed[]
+	 */
+	public function toArray(): array;
+
 }

@@ -11,4 +11,9 @@ interface HistoricalPriceInterface
 
 	public function getDate(): DateTimeImmutable;
 
+	/**
+	 * @return mixed[]
+	 */
+	public function toArray(): array;
+
 }

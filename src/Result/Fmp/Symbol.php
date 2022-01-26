@@ -6,19 +6,11 @@ use Utilitte\Asserts\ArrayTypeAssert;
 use Utilitte\Asserts\TypeAssert;
 use WebChemistry\Stocks\Enum\TickerTypeEnum;
 use WebChemistry\Stocks\Exception\StockClientException;
+use WebChemistry\Stocks\Result\ArrayResult;
 use WebChemistry\Stocks\Result\SymbolInterface;
 
-final class Symbol implements SymbolInterface
+final class Symbol extends ArrayResult implements SymbolInterface
 {
-
-	/**
-	 * @param mixed[] $data
-	 */
-	public function __construct(
-		private array $data,
-	)
-	{
-	}
 
 	public function getSymbol(): string
 	{

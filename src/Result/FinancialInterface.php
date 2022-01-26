@@ -7,4 +7,9 @@ interface FinancialInterface
 
 	public function getEbitda(): ?int;
 
+	/**
+	 * @return mixed[]
+	 */
+	public function toArray(): array;
+
 }

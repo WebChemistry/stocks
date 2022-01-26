@@ -11,4 +11,9 @@ interface RealtimePriceInterface
 
 	public function getVolume(): int;
 
+	/**
+	 * @return mixed[]
+	 */
+	public function toArray(): array;
+
 }

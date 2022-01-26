@@ -3,19 +3,11 @@
 namespace WebChemistry\Stocks\Result\Fmp;
 
 use Utilitte\Asserts\ArrayTypeAssert;
+use WebChemistry\Stocks\Result\ArrayResult;
 use WebChemistry\Stocks\Result\RealtimePriceInterface;
 
-final class RealtimePrice implements RealtimePriceInterface
+final class RealtimePrice extends ArrayResult implements RealtimePriceInterface
 {
-
-	/**
-	 * @param mixed[] $data
-	 */
-	public function __construct(
-		private array $data,
-	)
-	{
-	}
 
 	public function getSymbol(): string
 	{
