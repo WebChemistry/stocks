@@ -22,7 +22,7 @@ final class SymbolCollection implements IteratorAggregate, Countable
 	 * @param array<string, T> $collection
 	 */
 	public function __construct(
-		private array $collection,
+		private array $collection = [],
 	)
 	{
 	}

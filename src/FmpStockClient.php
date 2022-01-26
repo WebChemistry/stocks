@@ -87,6 +87,10 @@ final class FmpStockClient implements StockClientInterface
 	 */
 	public function realtimePrices(array $symbols, array $options = []): SymbolCollection
 	{
+		if (!$symbols) {
+			return new SymbolCollection();
+		}
+
 		return StockMapperHelper::mapToCollection(
 			RealtimePrice::class,
 			$this->request($this->createUrl('quote-short', $symbols))
@@ -171,6 +175,10 @@ final class FmpStockClient implements StockClientInterface
 	 */
 	public function quotes(array $symbols, array $options = []): SymbolCollection
 	{
+		if (!$symbols) {
+			return new SymbolCollection();
+		}
+
 		$data = $this->request($this->createUrl('quote', $symbols));
 
 		return StockMapperHelper::mapToCollection(Quote::class, $data);
