@@ -7,8 +7,9 @@ use Utilitte\Asserts\TypeAssert;
 use WebChemistry\Stocks\Collection\SymbolCollection;
 use WebChemistry\Stocks\Exception\StockClientNoDataException;
 
-final class MapperHelper
+final class StockMapperHelper
 {
+
 	/**
 	 * @template T of object
 	 * @param class-string<T> $class

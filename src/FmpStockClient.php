@@ -13,7 +13,7 @@ use WebChemistry\Stocks\Collection\SymbolCollection;
 use WebChemistry\Stocks\Enum\PeriodEnum;
 use WebChemistry\Stocks\Exception\StockClientException;
 use WebChemistry\Stocks\Exception\StockClientNoDataException;
-use WebChemistry\Stocks\Helper\MapperHelper;
+use WebChemistry\Stocks\Helper\StockMapperHelper;
 use WebChemistry\Stocks\Period\DateTimeRange;
 use WebChemistry\Stocks\Period\StockPeriod;
 use WebChemistry\Stocks\Result\FinancialInterface;
@@ -66,7 +66,7 @@ final class FmpStockClient implements StockClientInterface
 			)
 		);
 
-		return MapperHelper::mapToObjects(HistoricalPrice::class, ArrayTypeAssert::array($response, 'results'));
+		return StockMapperHelper::mapToObjects(HistoricalPrice::class, ArrayTypeAssert::array($response, 'results'));
 	}
 
 	/**
@@ -74,7 +74,7 @@ final class FmpStockClient implements StockClientInterface
 	 */
 	public function realtimePrice(string $symbol, array $options = []): RealtimePriceInterface
 	{
-		return MapperHelper::mapToObject(
+		return StockMapperHelper::mapToObject(
 			RealtimePrice::class,
 			$this->request($this->createUrl('quote-short', $symbol))
 		);
@@ -87,7 +87,7 @@ final class FmpStockClient implements StockClientInterface
 	 */
 	public function realtimePrices(array $symbols, array $options = []): SymbolCollection
 	{
-		return MapperHelper::mapToCollection(
+		return StockMapperHelper::mapToCollection(
 			RealtimePrice::class,
 			$this->request($this->createUrl('quote-short', $symbols))
 		);
@@ -100,19 +100,19 @@ final class FmpStockClient implements StockClientInterface
 	 */
 	public function symbolList(array $options = []): SymbolCollection
 	{
-		$stocks = MapperHelper::mapWithSymbolKey(
+		$stocks = StockMapperHelper::mapWithSymbolKey(
 			fn (array $data) => new Symbol($data),
 			$this->request($this->createUrl('stock/list'))
 		);
-		$indexes = MapperHelper::mapWithSymbolKey(
+		$indexes = StockMapperHelper::mapWithSymbolKey(
 			fn (array $data) => Symbol::createFromIndex($data),
 			$this->request($this->createUrl('quotes/index'))
 		);
-		$cryptos = MapperHelper::mapWithSymbolKey(
+		$cryptos = StockMapperHelper::mapWithSymbolKey(
 			fn (array $data) => Symbol::createFromCrypto($data),
 			$this->request($this->createUrl('quotes/crypto'))
 		);
-		$commodities = MapperHelper::mapWithSymbolKey(
+		$commodities = StockMapperHelper::mapWithSymbolKey(
 			fn (array $data) => Symbol::createFromCommodity($data),
 			$this->request($this->createUrl('quotes/commodity'))
 		);
@@ -127,7 +127,7 @@ final class FmpStockClient implements StockClientInterface
 	 */
 	public function financials(string $symbol, ?int $limit = null, ?PeriodEnum $period = null, array $options = []): array
 	{
-		return MapperHelper::mapToObjects(
+		return StockMapperHelper::mapToObjects(
 			Financial::class,
 			$this->request(
 				$this->createUrl('income-statement', $symbol)
@@ -173,7 +173,7 @@ final class FmpStockClient implements StockClientInterface
 	{
 		$data = $this->request($this->createUrl('quote', $symbols));
 
-		return MapperHelper::mapToCollection(Quote::class, $data);
+		return StockMapperHelper::mapToCollection(Quote::class, $data);
 	}
 
 	/**
