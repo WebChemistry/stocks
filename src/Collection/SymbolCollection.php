@@ -10,7 +10,6 @@ use Nette\Utils\Arrays;
 use OutOfBoundsException;
 use Utilitte\Asserts\TypeAssert;
 use WebChemistry\Stocks\Result\ArrayResultInterface;
-use WebChemistry\Stocks\Result\QuoteInterface;
 
 /**
  * @template T of object
