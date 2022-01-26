@@ -6,8 +6,11 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use LogicException;
+use Nette\Utils\Arrays;
 use OutOfBoundsException;
+use Utilitte\Asserts\TypeAssert;
 use WebChemistry\Stocks\Result\ArrayResultInterface;
+use WebChemistry\Stocks\Result\QuoteInterface;
 
 /**
  * @template T of object
@@ -66,6 +69,26 @@ final class SymbolCollection implements IteratorAggregate, Countable
 	}
 
 	/**
+	 * @return array{ type: class-string<T>|null, cache: array<string, array<string|int, mixed>> }
+	 */
+	public function cache(): array
+	{
+		$first = Arrays::first($this->collection);
+
+		if (!is_object($first)) {
+			return [
+				'type' => false,
+				'cache' => [],
+			];
+		}
+
+		return [
+			'type' => $first::class,
+			'cache' => $this->flatten(),
+		];
+	}
+
+	/**
 	 * @return array<string, array<string|int, mixed>>
 	 */
 	public function flatten(): array
@@ -91,6 +114,36 @@ final class SymbolCollection implements IteratorAggregate, Countable
 	public function count(): int
 	{
 		return count($this->collection);
+	}
+
+	/**
+	 * @template X of ArrayResultInterface
+	 * @param mixed[] $cache
+	 * @param class-string<X> $type
+	 * @return SymbolCollection<X>
+	 */
+	public static function fromCache(string $type, array $cache): SymbolCollection
+	{
+		$collection = [];
+
+		if (!isset($cache['type'])) {
+			throw new LogicException('Given cache does not have type key.');
+		}
+
+		if (!isset($cache['cache'])) {
+			throw new LogicException('Given cache does not have cache key.');
+		}
+
+		$factory = TypeAssert::string($cache['type']);
+		if (!is_a($factory, $type, true)) {
+			throw new LogicException(sprintf('Given type %s is not instance of %s.', $type, $factory));
+		}
+
+		foreach (TypeAssert::array($cache['cache']) as $key => $value) {
+			$collection[$key] = new $factory($value);
+		}
+
+		return new SymbolCollection($collection);
 	}
 
 }
