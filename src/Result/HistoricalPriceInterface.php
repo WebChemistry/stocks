@@ -4,16 +4,11 @@ namespace WebChemistry\Stocks\Result;
 
 use DateTimeImmutable;
 
-interface HistoricalPriceInterface
+interface HistoricalPriceInterface extends ArrayResultInterface
 {
 
 	public function getPrice(): float;
 
 	public function getDate(): DateTimeImmutable;
-
-	/**
-	 * @return mixed[]
-	 */
-	public function toArray(): array;
 
 }

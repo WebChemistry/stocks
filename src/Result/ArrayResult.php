@@ -2,7 +2,7 @@
 
 namespace WebChemistry\Stocks\Result;
 
-abstract class ArrayResult
+abstract class ArrayResult implements ArrayResultInterface
 {
 
 	/**

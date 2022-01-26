@@ -2,7 +2,7 @@
 
 namespace WebChemistry\Stocks\Result;
 
-interface RealtimePriceInterface
+interface RealtimePriceInterface extends ArrayResultInterface
 {
 
 	public function getSymbol(): string;
@@ -10,10 +10,5 @@ interface RealtimePriceInterface
 	public function getPrice(): float;
 
 	public function getVolume(): int;
-
-	/**
-	 * @return mixed[]
-	 */
-	public function toArray(): array;
 
 }

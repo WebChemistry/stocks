@@ -2,14 +2,9 @@
 
 namespace WebChemistry\Stocks\Result;
 
-interface FinancialInterface
+interface FinancialInterface extends ArrayResultInterface
 {
 
 	public function getEbitda(): ?int;
-
-	/**
-	 * @return mixed[]
-	 */
-	public function toArray(): array;
 
 }

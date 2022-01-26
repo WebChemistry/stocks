@@ -2,7 +2,7 @@
 
 namespace WebChemistry\Stocks\Result;
 
-interface QuoteInterface
+interface QuoteInterface extends ArrayResultInterface
 {
 
 	public function getSymbol(): string;
@@ -18,10 +18,5 @@ interface QuoteInterface
 	public function getOpen(): float;
 
 	public function getPreviousClose(): float;
-
-	/**
-	 * @return mixed[]
-	 */
-	public function toArray(): array;
 
 }

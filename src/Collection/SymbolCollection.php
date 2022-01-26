@@ -5,7 +5,9 @@ namespace WebChemistry\Stocks\Collection;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use LogicException;
 use OutOfBoundsException;
+use WebChemistry\Stocks\Result\ArrayResultInterface;
 
 /**
  * @template T of object
@@ -61,6 +63,29 @@ final class SymbolCollection implements IteratorAggregate, Countable
 	public function getAll(): array
 	{
 		return $this->collection;
+	}
+
+	/**
+	 * @return array<string, array<string|int, mixed>>
+	 */
+	public function flatten(): array
+	{
+		$flatten = [];
+
+		foreach ($this->collection as $key => $value) {
+			if (!$value instanceof ArrayResultInterface) {
+				throw new LogicException(
+					sprintf(
+						'Flatten method expects array of %s, %s given.',
+						ArrayResultInterface::class,
+						get_debug_type($value),
+					)
+				);
+			}
+			$flatten[$key] = $value->toArray();
+		}
+
+		return $flatten;
 	}
 
 	public function count(): int

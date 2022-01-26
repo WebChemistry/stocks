@@ -4,7 +4,7 @@ namespace WebChemistry\Stocks\Result;
 
 use WebChemistry\Stocks\Enum\TickerTypeEnum;
 
-interface SymbolInterface
+interface SymbolInterface extends ArrayResultInterface
 {
 
 	public function getSymbol(): string;
@@ -14,10 +14,5 @@ interface SymbolInterface
 	public function getExchange(): ?string;
 
 	public function getType(): TickerTypeEnum;
-
-	/**
-	 * @return mixed[]
-	 */
-	public function toArray(): array;
 
 }
