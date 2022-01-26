@@ -168,7 +168,6 @@ final class FmpStockClient implements StockClientInterface
 	 * @param string[] $symbols
 	 * @param mixed[] $options
 	 * @return SymbolCollection<Quote>
-	 * @throws StockClientNoDataException
 	 */
 	public function quotes(array $symbols, array $options = []): SymbolCollection
 	{

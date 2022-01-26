@@ -60,4 +60,11 @@ interface StockClientInterface
 	 */
 	public function quote(string $symbol, array $options = []): QuoteInterface;
 
+	/**
+	 * @param string[] $symbols
+	 * @param mixed[] $options
+	 * @return SymbolCollection<QuoteInterface>
+	 */
+	public function quotes(array $symbols, array $options = []): SymbolCollection;
+
 }
