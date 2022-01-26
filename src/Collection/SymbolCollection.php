@@ -38,9 +38,9 @@ final class SymbolCollection implements IteratorAggregate, Countable
 	public function get(string $symbol): object
 	{
 		return $this->collection[$symbol] ?? throw new OutOfBoundsException(sprintf(
-			'Symbol %s not exists in collection.',
-			$symbol
-		));
+				'Symbol %s not exists in collection.',
+				$symbol
+			));
 	}
 
 	/**
@@ -76,7 +76,7 @@ final class SymbolCollection implements IteratorAggregate, Countable
 
 		if (!is_object($first)) {
 			return [
-				'type' => false,
+				'type' => null,
 				'cache' => [],
 			];
 		}
@@ -125,7 +125,7 @@ final class SymbolCollection implements IteratorAggregate, Countable
 	{
 		$collection = [];
 
-		if (!isset($cache['type'])) {
+		if (!array_key_exists('type', $cache)) {
 			throw new LogicException('Given cache does not have type key.');
 		}
 
@@ -133,7 +133,11 @@ final class SymbolCollection implements IteratorAggregate, Countable
 			throw new LogicException('Given cache does not have cache key.');
 		}
 
-		$factory = TypeAssert::string($cache['type']);
+		$factory = TypeAssert::stringOrNull($cache['type']);
+		if ($factory === null) { // null is empty collection
+			return new SymbolCollection();
+		}
+
 		if (!is_a($factory, $type, true)) {
 			throw new LogicException(sprintf('Given type %s is not instance of %s.', $type, $factory));
 		}
