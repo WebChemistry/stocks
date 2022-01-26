@@ -29,6 +29,8 @@ use WebChemistry\Stocks\Result\SymbolInterface;
 final class FmpStockClient implements StockClientInterface
 {
 
+	public const HISTORICAL_PRICE_CRYPTO = 'fmp_historical_price_crypto';
+
 	private const API_URL = 'https://financialmodelingprep.com/api/v3/';
 	private const API_URL_V4 = 'https://financialmodelingprep.com/api/v4/';
 
@@ -43,15 +45,17 @@ final class FmpStockClient implements StockClientInterface
 	}
 
 	/**
+	 * @param mixed[] $options
 	 * @return HistoricalPrice[]
 	 */
-	public function historicalPrice(string $symbol, StockPeriod $period, ?DateTimeRange $range = null): array
+	public function historicalPrice(string $symbol, StockPeriod $period, ?DateTimeRange $range = null, array $options = []): array
 	{
 		$range ??= DateTimeRange::createFromPeriod($period, 10);
 		$response = $this->request(
 			$this->createUrl(
 				sprintf(
-					'historical-price/%s/%d/%s/%s/%s',
+					'%s/%s/%d/%s/%s/%s',
+					isset($options[self::HISTORICAL_PRICE_CRYPTO]) ? 'historical-price-crypto-interval' : 'historical-price',
 					$symbol,
 					$period->getNumber(),
 					$period->getPeriod(),
@@ -64,8 +68,11 @@ final class FmpStockClient implements StockClientInterface
 
 		return MapperHelper::mapToObjects(HistoricalPrice::class, ArrayTypeAssert::array($response, 'results'));
 	}
-	
-	public function realtimePrice(string $symbol): RealtimePriceInterface
+
+	/**
+	 * @param mixed[] $options
+	 */
+	public function realtimePrice(string $symbol, array $options = []): RealtimePriceInterface
 	{
 		return MapperHelper::mapToObject(
 			RealtimePrice::class,
@@ -75,9 +82,10 @@ final class FmpStockClient implements StockClientInterface
 
 	/**
 	 * @param string[] $symbols
+	 * @param mixed[] $options
 	 * @return SymbolCollection<RealtimePriceInterface>
 	 */
-	public function realtimePrices(array $symbols): SymbolCollection
+	public function realtimePrices(array $symbols, array $options = []): SymbolCollection
 	{
 		return MapperHelper::mapToCollection(
 			RealtimePrice::class,
@@ -87,9 +95,10 @@ final class FmpStockClient implements StockClientInterface
 
 	/**
 	 * @see https://site.financialmodelingprep.com/developer/docs#Symbols-List
+	 * @param mixed[] $options
 	 * @return SymbolCollection<SymbolInterface>
 	 */
-	public function symbolList(): SymbolCollection
+	public function symbolList(array $options = []): SymbolCollection
 	{
 		$stocks = MapperHelper::mapWithSymbolKey(
 			fn (array $data) => new Symbol($data),
@@ -113,9 +122,10 @@ final class FmpStockClient implements StockClientInterface
 
 	/**
 	 * @see https://site.financialmodelingprep.com/developer/docs#Company-Financial-Statements
+	 * @param mixed[] $options
 	 * @return FinancialInterface[]
 	 */
-	public function financials(string $symbol, ?int $limit = null, ?PeriodEnum $period = null): array
+	public function financials(string $symbol, ?int $limit = null, ?PeriodEnum $period = null, array $options = []): array
 	{
 		return MapperHelper::mapToObjects(
 			Financial::class,
@@ -127,7 +137,10 @@ final class FmpStockClient implements StockClientInterface
 		);
 	}
 
-	public function financial(string $symbol, ?PeriodEnum $period = null): ?FinancialInterface
+	/**
+	 * @param mixed[] $options
+	 */
+	public function financial(string $symbol, ?PeriodEnum $period = null, array $options = []): ?FinancialInterface
 	{
 		$financials = $this->financials($symbol, 1, $period);
 
@@ -136,9 +149,10 @@ final class FmpStockClient implements StockClientInterface
 
 	/**
 	 * @see https://site.financialmodelingprep.com/developer/docs#Company-Quote
+	 * @param mixed[] $options
 	 * @throws StockClientNoDataException
 	 */
-	public function quote(string $symbol): QuoteInterface
+	public function quote(string $symbol, array $options = []): QuoteInterface
 	{
 		$data = $this->request($this->createUrl('quote', $symbol));
 
@@ -152,10 +166,11 @@ final class FmpStockClient implements StockClientInterface
 	/**
 	 * @see https://site.financialmodelingprep.com/developer/docs#Company-Quote
 	 * @param string[] $symbols
+	 * @param mixed[] $options
 	 * @return SymbolCollection<Quote>
 	 * @throws StockClientNoDataException
 	 */
-	public function quotes(array $symbols): SymbolCollection
+	public function quotes(array $symbols, array $options = []): SymbolCollection
 	{
 		$data = $this->request($this->createUrl('quote', $symbols));
 

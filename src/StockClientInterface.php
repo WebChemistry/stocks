@@ -16,30 +16,48 @@ interface StockClientInterface
 {
 
 	/**
+	 * @param mixed[] $options
 	 * @return HistoricalPriceInterface[]
 	 */
-	public function historicalPrice(string $symbol, StockPeriod $period, ?DateTimeRange $range = null): array;
-
-	public function realtimePrice(string $symbol): RealtimePriceInterface;
+	public function historicalPrice(
+		string $symbol,
+		StockPeriod $period,
+		?DateTimeRange $range = null,
+		array $options = [],
+	): array;
 
 	/**
+	 * @param mixed[] $options
+	 */
+	public function realtimePrice(string $symbol, array $options = []): RealtimePriceInterface;
+
+	/**
+	 * @param mixed[] $options
 	 * @param string[] $symbols
 	 * @return SymbolCollection<RealtimePriceInterface>
 	 */
-	public function realtimePrices(array $symbols): SymbolCollection;
+	public function realtimePrices(array $symbols, array $options = []): SymbolCollection;
 
 	/**
+	 * @param mixed[] $options
 	 * @return SymbolCollection<SymbolInterface>
 	 */
-	public function symbolList(): SymbolCollection;
+	public function symbolList(array $options = []): SymbolCollection;
 
 	/**
+	 * @param mixed[] $options
 	 * @return FinancialInterface[]
 	 */
-	public function financials(string $symbol, ?int $limit = null, ?PeriodEnum $period = null): array;
+	public function financials(string $symbol, ?int $limit = null, ?PeriodEnum $period = null, array $options = []): array;
 
-	public function financial(string $symbol, ?PeriodEnum $period = null): ?FinancialInterface;
+	/**
+	 * @param mixed[] $options
+	 */
+	public function financial(string $symbol, ?PeriodEnum $period = null, array $options = []): ?FinancialInterface;
 
-	public function quote(string $symbol): QuoteInterface;
+	/**
+	 * @param mixed[] $options
+	 */
+	public function quote(string $symbol, array $options = []): QuoteInterface;
 
 }
