@@ -55,7 +55,7 @@ final class FmpStockClient implements StockClientInterface
 			$this->createUrl(
 				sprintf(
 					'%s/%s/%d/%s/%s/%s',
-					isset($options[self::HISTORICAL_PRICE_CRYPTO]) ? 'historical-price-crypto-interval' : 'historical-price',
+					($options[self::HISTORICAL_PRICE_CRYPTO] ?? false) ? 'historical-price-crypto-interval' : 'historical-price',
 					$symbol,
 					$period->getNumber(),
 					$period->getPeriod(),
