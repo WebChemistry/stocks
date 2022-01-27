@@ -51,11 +51,19 @@ final class FmpStockClient implements StockClientInterface
 	public function historicalPrice(string $symbol, StockPeriod $period, ?DateTimeRange $range = null, array $options = []): array
 	{
 		$range ??= DateTimeRange::createFromPeriod($period, 10);
+
+		if (str_starts_with($symbol, '^')) {
+			$endpoint = 'historical-price-index';
+			$symbol = substr($symbol, 1);
+		} else {
+			$endpoint = ($options[self::HISTORICAL_PRICE_CRYPTO] ?? false) ? 'historical-price-crypto-interval' : 'historical-price';
+		}
+
 		$response = $this->request(
 			$this->createUrl(
 				sprintf(
 					'%s/%s/%d/%s/%s/%s',
-					($options[self::HISTORICAL_PRICE_CRYPTO] ?? false) ? 'historical-price-crypto-interval' : 'historical-price',
+					$endpoint,
 					$symbol,
 					$period->getNumber(),
 					$period->getPeriod(),
