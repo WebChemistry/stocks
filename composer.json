@@ -6,7 +6,9 @@
         "myclabs/php-enum": "^1.8",
         "nette/utils": "^3.2",
         "nette/http": "^3.1",
-        "utilitte/asserts": "^1.2"
+        "utilitte/asserts": "^1.2",
+        "utilitte/php": "^1.5.0",
+        "league/csv": "^9.8"
     },
     "autoload": {
         "psr-4": {

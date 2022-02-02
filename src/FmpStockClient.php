@@ -2,18 +2,20 @@
 
 namespace WebChemistry\Stocks;
 
+use DateTime;
+use League\Csv\Reader;
 use Nette\Http\Url;
 use Nette\Utils\Arrays;
 use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Utilitte\Asserts\ArrayTypeAssert;
 use Utilitte\Asserts\TypeAssert;
+use WebChemistry\Stocks\Async\AsyncArrayRequest;
 use WebChemistry\Stocks\Collection\SymbolCollection;
 use WebChemistry\Stocks\Enum\PeriodEnum;
-use WebChemistry\Stocks\Exception\StockClientException;
 use WebChemistry\Stocks\Exception\StockClientNoDataException;
 use WebChemistry\Stocks\Helper\StockMapperHelper;
+use WebChemistry\Stocks\HttpClient\HttpClientTransaction;
 use WebChemistry\Stocks\Period\DateTimeRange;
 use WebChemistry\Stocks\Period\StockPeriod;
 use WebChemistry\Stocks\Result\FinancialInterface;
@@ -29,6 +31,62 @@ use WebChemistry\Stocks\Result\SymbolInterface;
 final class FmpStockClient implements StockClientInterface
 {
 
+	public const SEGMENT_ALL = [
+		'amex',
+		'nasdaq',
+		'nyse',
+		'etf',
+		'mutual_fund',
+		'euronext',
+		'tsx',
+		'mcx',
+		'xetra',
+		'nse',
+		'lse',
+		'six',
+		'hkse',
+		'ose',
+		'ase',
+		'bru',
+		'jkt',
+		'vie',
+		'sgo',
+		'shz',
+		'shh',
+		'ham',
+		'cph',
+		'ath',
+		'mil',
+		'jpx',
+		'ksc',
+		'koe',
+		'sto',
+		'ist',
+		'tai',
+		'mex',
+		'jnb',
+		'lis',
+		'tlv',
+		'mce',
+		'wse',
+		'hel',
+		'sao',
+		'set',
+		'iob',
+		'doh',
+		'kls',
+		'pra',
+		'ams',
+		'ber',
+		'two',
+		'sau',
+		'ice',
+		'commodity',
+		'crypto',
+		'index',
+		'forex',
+	];
+
 	public const HISTORICAL_PRICE_CRYPTO = 'fmp_historical_price_crypto';
 
 	private const API_URL = 'https://financialmodelingprep.com/api/v3/';
@@ -42,6 +100,65 @@ final class FmpStockClient implements StockClientInterface
 	)
 	{
 		$this->client = $client ?? HttpClient::create();
+	}
+
+	public function profiles(): Reader
+	{
+		$response = $this->client->request('GET', (string) $this->createUrl('profile/all', apiUrl: self::API_URL_V4));
+
+		$reader = Reader::createFromString($response->getContent());
+		$reader->setHeaderOffset(0);
+
+		return $reader;
+	}
+
+
+
+	/**
+	 * @param string|string[] $segment
+	 * @return SymbolCollection<Quote>
+	 */
+	public function quotesBySegments(string|array $segments): SymbolCollection
+	{
+		$transaction = $this->createTransaction();
+
+		$responses = [];
+		foreach ((array) $segments as $segment) {
+			$responses[] = $transaction->request('GET', (string) $this->createUrl('quotes', $segment));
+		}
+
+		$transaction->commit();
+
+		$collection = [];
+
+		foreach ($responses as $response) {
+			$collection[] = StockMapperHelper::mapWithSymbolKey(
+				fn (array $data) => new Quote($data),
+				array_filter(
+					$response->toArray(),
+					fn (array $data) => $data['price'] !== null &&
+										$data['marketCap'] !== null &&
+										$data['previousClose'] !== null &&
+										$data['open'] !== null
+				)
+			);
+		}
+
+		return new SymbolCollection(array_merge(...$collection));
+	}
+
+	public function allEndOfDayPrices(): array
+	{
+		$url = $this->createUrl('batch-request-end-of-day-prices', apiUrl: self::API_URL_V4)
+			->setQueryParameter('date', (new DateTime('- 1 day'))->format('Y-m-d'));
+		$response = $this->client->request('GET', (string) $url);
+
+		$array = [];
+		foreach (explode("\n", $response->getContent()) as $line) {
+			$array[] = str_getcsv($line);
+		}
+
+		return array_slice($array, 1);
 	}
 
 	/**
@@ -112,24 +229,38 @@ final class FmpStockClient implements StockClientInterface
 	 */
 	public function symbolList(array $options = []): SymbolCollection
 	{
+		$transaction = $this->createTransaction();
+
+		$stocks = $transaction->request('GET', (string) $this->createUrl('stock/list'));
+		$etfs = $transaction->request('GET', (string) $this->createUrl('etf/list'));
+		$indexes = $transaction->request('GET', (string) $this->createUrl('quotes/index'));
+		$cryptos = $transaction->request('GET', (string) $this->createUrl('quotes/crypto'));
+		$commodities = $transaction->request('GET', (string) $this->createUrl('quotes/commodity'));
+
+		$transaction->commit();
+
 		$stocks = StockMapperHelper::mapWithSymbolKey(
 			fn (array $data) => new Symbol($data),
-			$this->request($this->createUrl('stock/list'))
+			$stocks->toArray(),
 		);
 		$indexes = StockMapperHelper::mapWithSymbolKey(
 			fn (array $data) => Symbol::createFromIndex($data),
-			$this->request($this->createUrl('quotes/index'))
+			$indexes->toArray()
+		);
+		$etfs = StockMapperHelper::mapWithSymbolKey(
+			fn (array $data) => Symbol::createFromEtf($data),
+			$etfs->toArray()
 		);
 		$cryptos = StockMapperHelper::mapWithSymbolKey(
 			fn (array $data) => Symbol::createFromCrypto($data),
-			$this->request($this->createUrl('quotes/crypto'))
+			$cryptos->toArray()
 		);
 		$commodities = StockMapperHelper::mapWithSymbolKey(
 			fn (array $data) => Symbol::createFromCommodity($data),
-			$this->request($this->createUrl('quotes/commodity'))
+			$commodities->toArray()
 		);
 
-		return new SymbolCollection(array_merge($stocks, $indexes, $cryptos, $commodities));
+		return new SymbolCollection(array_merge($stocks, $indexes, $cryptos, $commodities, $etfs));
 	}
 
 	/**
@@ -195,7 +326,7 @@ final class FmpStockClient implements StockClientInterface
 	/**
 	 * @param string[]|string $symbols
 	 */
-	private function createUrl(
+	public function createUrl(
 		string $path,
 		array|string|null $symbols = null,
 		bool $apiKey = true,
@@ -218,15 +349,15 @@ final class FmpStockClient implements StockClientInterface
 	/**
 	 * @return mixed[]
 	 */
-	private function request(Url $url): array
+	public function request(Url $url): array
 	{
-		try {
-			$response = $this->client->request('GET', (string) $url);
-
-			return $response->toArray();
-		} catch (ExceptionInterface $exception) {
-			throw new StockClientException('Error occured while http request.', 0, $exception);
-		}
+		return $this->client->request('GET', (string) $url)->toArray();
 	}
+
+	private function createTransaction(): HttpClientTransaction
+	{
+		return new HttpClientTransaction($this->client, 2);
+	}
+
 
 }

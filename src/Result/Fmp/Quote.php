@@ -14,6 +14,11 @@ final class Quote extends ArrayResult implements QuoteInterface
 		return ArrayTypeAssert::string($this->data, 'symbol');
 	}
 
+	public function getExchange(): string
+	{
+		return ArrayTypeAssert::string($this->data, 'exchange');
+	}
+
 	public function getName(): string
 	{
 		return ArrayTypeAssert::string($this->data, 'name');
@@ -37,6 +42,21 @@ final class Quote extends ArrayResult implements QuoteInterface
 	public function getOpen(): float
 	{
 		return ArrayTypeAssert::floatish($this->data, 'open');
+	}
+
+	public function getPe(): ?float
+	{
+		return ArrayTypeAssert::floatishOrNull($this->data, 'pe');
+	}
+
+	public function getEps(): ?float
+	{
+		return ArrayTypeAssert::floatishOrNull($this->data, 'eps');
+	}
+
+	public function getMarketCap(): float
+	{
+		return ArrayTypeAssert::floatish($this->data, 'marketCap');
 	}
 
 	public function getPreviousClose(): float
