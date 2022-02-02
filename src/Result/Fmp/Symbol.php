@@ -60,6 +60,16 @@ final class Symbol extends ArrayResult implements SymbolInterface
 	/**
 	 * @param mixed[] $data
 	 */
+	public static function createFromFund(array $data): self
+	{
+		$data['type'] = 'fund';
+
+		return new self($data);
+	}
+
+	/**
+	 * @param mixed[] $data
+	 */
 	public static function createFromIndex(array $data): self
 	{
 		$data['type'] = 'index';

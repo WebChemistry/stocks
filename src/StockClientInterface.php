@@ -67,4 +67,34 @@ interface StockClientInterface
 	 */
 	public function quotes(array $symbols, array $options = []): SymbolCollection;
 
+	/**
+	 * @param mixed[] $options
+	 * @return SymbolCollection<SymbolInterface>
+	 */
+	public function funds(array $options = []): SymbolCollection;
+
+	/**
+	 * @param mixed[] $options
+	 * @return SymbolCollection<SymbolInterface>
+	 */
+	public function etfs(array $options = []): SymbolCollection;
+
+	/**
+	 * @param mixed[] $options
+	 * @return SymbolCollection<SymbolInterface>
+	 */
+	public function indexes(array $options = []): SymbolCollection;
+
+	/**
+	 * @param mixed[] $options
+	 * @return SymbolCollection<SymbolInterface>
+	 */
+	public function cryptos(array $options = []): SymbolCollection;
+
+	/**
+	 * @param mixed[] $options
+	 * @return SymbolCollection<SymbolInterface>
+	 */
+	public function commodities(array $options = []): SymbolCollection;
+
 }

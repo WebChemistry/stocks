@@ -223,6 +223,76 @@ final class FmpStockClient implements StockClientInterface
 	}
 
 	/**
+	 * @param mixed[] $options
+	 * @return SymbolCollection<Symbol>
+	 */
+	public function indexes(array $options = []): SymbolCollection
+	{
+		$symbols = StockMapperHelper::mapWithSymbolKey(
+			fn (array $data) => Symbol::createFromIndex($data),
+			$this->request($this->createUrl('quotes/index'))
+		);
+
+		return new SymbolCollection($symbols);
+	}
+
+	/**
+	 * @param mixed[] $options
+	 * @return SymbolCollection<Symbol>
+	 */
+	public function etfs(array $options = []): SymbolCollection
+	{
+		$symbols = StockMapperHelper::mapWithSymbolKey(
+			fn (array $data) => Symbol::createFromEtf($data),
+			$this->request($this->createUrl('quotes/etf'))
+		);
+
+		return new SymbolCollection($symbols);
+	}
+
+	/**
+	 * @param mixed[] $options
+	 * @return SymbolCollection<Symbol>
+	 */
+	public function funds(array $options = []): SymbolCollection
+	{
+		$symbols = StockMapperHelper::mapWithSymbolKey(
+			fn (array $data) => Symbol::createFromFund($data),
+			$this->request($this->createUrl('quotes/mutual_fund'))
+		);
+
+		return new SymbolCollection($symbols);
+	}
+
+	/**
+	 * @param mixed[] $options
+	 * @return SymbolCollection<Symbol>
+	 */
+	public function cryptos(array $options = []): SymbolCollection
+	{
+		$symbols = StockMapperHelper::mapWithSymbolKey(
+			fn (array $data) => Symbol::createFromFund($data),
+			$this->request($this->createUrl('quotes/cryptos'))
+		);
+
+		return new SymbolCollection($symbols);
+	}
+
+	/**
+	 * @param mixed[] $options
+	 * @return SymbolCollection<Symbol>
+	 */
+	public function commodities(array $options = []): SymbolCollection
+	{
+		$symbols = StockMapperHelper::mapWithSymbolKey(
+			fn (array $data) => Symbol::createFromCommodity($data),
+			$this->request($this->createUrl('quotes/commodity'))
+		);
+
+		return new SymbolCollection($symbols);
+	}
+
+	/**
 	 * @see https://site.financialmodelingprep.com/developer/docs#Symbols-List
 	 * @param mixed[] $options
 	 * @return SymbolCollection<SymbolInterface>
