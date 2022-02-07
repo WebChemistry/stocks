@@ -123,7 +123,7 @@ final class FmpStockClient implements StockClientInterface
 			$data = $this->request($this->createUrl('historical-chart/5min', $symbol));
 
 			return StockMapperHelper::mapToObjects(TimeSeries::class, array_slice($data, 0, 79));
-		} else if ($type->getValue() === TimeSeriesTypeEnum::DAY()->getValue()) {
+		} else if ($type->getValue() === TimeSeriesTypeEnum::FIVE_DAYS()->getValue()) {
 			$data = $this->request($this->createUrl('historical-chart/30min', $symbol));
 
 			return StockMapperHelper::mapToObjects(TimeSeries::class, array_slice($data, 0, 70));
@@ -165,10 +165,12 @@ final class FmpStockClient implements StockClientInterface
 						break;
 					}
 
-					if ($check && $date <= $min) {
-						$min = $date->modify('- 1 week');
-					} else {
-						continue;
+					if ($check) {
+						if ($date <= $min) {
+							$min = $date->modify('- 1 week');
+						} else {
+							continue;
+						}
 					}
 
 					$series[] = $item;
