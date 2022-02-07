@@ -4,6 +4,7 @@ namespace WebChemistry\Stocks;
 
 use WebChemistry\Stocks\Collection\SymbolCollection;
 use WebChemistry\Stocks\Enum\PeriodEnum;
+use WebChemistry\Stocks\Enum\TimeSeriesTypeEnum;
 use WebChemistry\Stocks\Period\DateTimeRange;
 use WebChemistry\Stocks\Period\StockPeriod;
 use WebChemistry\Stocks\Result\FinancialInterface;
@@ -11,6 +12,7 @@ use WebChemistry\Stocks\Result\HistoricalPriceInterface;
 use WebChemistry\Stocks\Result\QuoteInterface;
 use WebChemistry\Stocks\Result\RealtimePriceInterface;
 use WebChemistry\Stocks\Result\SymbolInterface;
+use WebChemistry\Stocks\Result\TimeSeriesInterface;
 
 interface StockClientInterface
 {
@@ -96,5 +98,10 @@ interface StockClientInterface
 	 * @return SymbolCollection<SymbolInterface>
 	 */
 	public function commodities(array $options = []): SymbolCollection;
+
+	/**
+	 * @return TimeSeriesInterface[]
+	 */
+	public function timeSeries(string $symbol, TimeSeriesTypeEnum $type): array;
 
 }

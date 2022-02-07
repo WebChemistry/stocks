@@ -13,6 +13,7 @@ use Utilitte\Asserts\TypeAssert;
 use WebChemistry\Stocks\Async\AsyncArrayRequest;
 use WebChemistry\Stocks\Collection\SymbolCollection;
 use WebChemistry\Stocks\Enum\PeriodEnum;
+use WebChemistry\Stocks\Enum\TimeSeriesTypeEnum;
 use WebChemistry\Stocks\Exception\StockClientNoDataException;
 use WebChemistry\Stocks\Helper\StockMapperHelper;
 use WebChemistry\Stocks\HttpClient\HttpClientTransaction;
@@ -24,6 +25,7 @@ use WebChemistry\Stocks\Result\Fmp\HistoricalPrice;
 use WebChemistry\Stocks\Result\Fmp\Quote;
 use WebChemistry\Stocks\Result\Fmp\RealtimePrice;
 use WebChemistry\Stocks\Result\Fmp\Symbol;
+use WebChemistry\Stocks\Result\Fmp\TimeSeries;
 use WebChemistry\Stocks\Result\QuoteInterface;
 use WebChemistry\Stocks\Result\RealtimePriceInterface;
 use WebChemistry\Stocks\Result\SymbolInterface;
@@ -112,7 +114,72 @@ final class FmpStockClient implements StockClientInterface
 		return $reader;
 	}
 
+	/**
+	 * @return TimeSeries[]
+	 */
+	public function timeSeries(string $symbol, TimeSeriesTypeEnum $type): array
+	{
+		if ($type->getValue() === TimeSeriesTypeEnum::DAY()->getValue()) {
+			$data = $this->request($this->createUrl('historical-chart/5min', $symbol));
 
+			return StockMapperHelper::mapToObjects(TimeSeries::class, array_slice($data, 0, 79));
+		} else if ($type->getValue() === TimeSeriesTypeEnum::DAY()->getValue()) {
+			$data = $this->request($this->createUrl('historical-chart/30min', $symbol));
+
+			return StockMapperHelper::mapToObjects(TimeSeries::class, array_slice($data, 0, 70));
+		} else {
+			$data = $this->request(
+				$this->createUrl('historical-price-full', $symbol)
+					->setQueryParameter('serietype', 'line')
+			);
+
+			if (!isset($data['historical'])) {
+				throw new StockClientNoDataException();
+			}
+
+			/** @var array{date: string, close: float|int}[] $data */
+			$data = $data['historical'];
+
+			if (TimeSeriesTypeEnum::MAX()->getValue() !== $type->getValue() || count($data) > 40) {
+				$series = [];
+				$check = null;
+				$max = null;
+				$min = $this->dateTime('+ 1 day');
+
+				if ($type->getValue() === TimeSeriesTypeEnum::MONTH()->getValue()) {
+					$max = $this->dateTime('- 1 month');
+				} elseif ($type->getValue() === TimeSeriesTypeEnum::SIX_MONTHS()->getValue()) {
+					$max = $this->dateTime('- 6 months');
+				} elseif ($type->getValue() === TimeSeriesTypeEnum::YEAR()->getValue()) {
+					$max = $this->dateTime('- 1 year');
+					$check = '- 1 week';
+				} elseif ($type->getValue() === TimeSeriesTypeEnum::FIVE_YEARS()->getValue()) {
+					$max = $this->dateTime('- 5 years');
+					$check = '- 1 week';
+				}
+
+				foreach ($data as $item) {
+					$date = $this->dateTime($item['date']);
+
+					if ($max > $date) {
+						break;
+					}
+
+					if ($check && $date <= $min) {
+						$min = $date->modify('- 1 week');
+					} else {
+						continue;
+					}
+
+					$series[] = $item;
+				}
+			} else {
+				$series = $data;
+			}
+		}
+
+		return StockMapperHelper::mapToObjects(TimeSeries::class, $series);
+	}
 
 	/**
 	 * @param string|string[] $segment
@@ -429,5 +496,9 @@ final class FmpStockClient implements StockClientInterface
 		return new HttpClientTransaction($this->client, 2);
 	}
 
+	private function dateTime(string $date): DateTime
+	{
+		return (new DateTime($date))->setTime(0, 0);
+	}
 
 }
