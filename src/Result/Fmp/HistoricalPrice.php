@@ -7,7 +7,7 @@ use Utilitte\Asserts\ArrayTypeAssert;
 use WebChemistry\Stocks\Result\ArrayResult;
 use WebChemistry\Stocks\Result\HistoricalPriceInterface;
 
-final class HistoricalPrice extends ArrayResult implements HistoricalPriceInterface
+class HistoricalPrice extends ArrayResult implements HistoricalPriceInterface
 {
 
 	public function getPrice(): float

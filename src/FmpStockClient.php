@@ -3,6 +3,8 @@
 namespace WebChemistry\Stocks;
 
 use DateTime;
+use DateTimeInterface;
+use Generator;
 use League\Csv\Reader;
 use Nette\Http\Url;
 use Nette\Utils\Arrays;
@@ -112,6 +114,28 @@ final class FmpStockClient implements StockClientInterface
 		$reader->setHeaderOffset(0);
 
 		return $reader;
+	}
+
+	/**
+	 * @return Generator<HistoricalPrice>
+	 */
+	public function endPrices(DateTimeInterface $dateTime): Generator
+	{
+		$response = $this->client->request(
+			'GET',
+			(string) $this->createUrl('batch-request-end-of-day-prices', apiUrl: self::API_URL_V4)
+		);
+
+		$reader = Reader::createFromString($response->getContent());
+		$reader->setHeaderOffset(0);
+
+		foreach ($reader as $item) {
+			yield new HistoricalPrice([
+				'symbol' => $item['symbol'],
+				'formatted' => $item['date'],
+				'c' => $item['close'],
+			]);
+		}
 	}
 
 	/**
