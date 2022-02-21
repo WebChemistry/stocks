@@ -10,6 +10,11 @@ use WebChemistry\Stocks\Result\HistoricalPriceInterface;
 class HistoricalPrice extends ArrayResult implements HistoricalPriceInterface
 {
 
+	public function getSymbol(): string
+	{
+		return ArrayTypeAssert::string($this->data, 'symbol');
+	}
+
 	public function getPrice(): float
 	{
 		return ArrayTypeAssert::floatish($this->data, 'c');
