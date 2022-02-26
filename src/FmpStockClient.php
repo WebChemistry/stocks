@@ -230,7 +230,7 @@ final class FmpStockClient implements StockClientInterface
 				array_filter(
 					$response->toArray(),
 					fn (array $data) => $data['price'] !== null &&
-										$data['marketCap'] !== null &&
+										$data['name'] !== null &&
 										$data['previousClose'] !== null &&
 										$data['open'] !== null
 				)
