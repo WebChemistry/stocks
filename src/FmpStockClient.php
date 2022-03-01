@@ -107,14 +107,14 @@ final class FmpStockClient implements StockClientInterface
 	}
 
 	/**
-	 * @param string[]|string $symbols
+	 * @param string[] $symbols
 	 * @return SymbolCollection<Rating>
 	 */
-	public function rating(array|string $symbols): SymbolCollection
+	public function ratings(array $symbols): SymbolCollection
 	{
 		$transaction = $this->createTransaction();
 
-		foreach ((array) $symbols as $symbol) {
+		foreach ($symbols as $symbol) {
 			$transaction->request('GET', (string) $this->createUrl('rating', $symbol), key: $symbol);
 		}
 
@@ -126,6 +126,11 @@ final class FmpStockClient implements StockClientInterface
 		}
 
 		return new SymbolCollection($collection);
+	}
+
+	public function rating(string $symbol): Rating
+	{
+		return $this->ratings([$symbol])->get($symbol);
 	}
 
 	public function profiles(): Reader
