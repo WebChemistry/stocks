@@ -23,12 +23,20 @@ final class HttpClientTransaction implements HttpClientInterface
 	/**
 	 * @param mixed[] $options
 	 */
-	public function request(string $method, string $url, array $options = []): ResponseInterface
+	public function request(string $method, string $url, array $options = [], ?string $key = null): ResponseInterface
 	{
-		return $this->responses[] = new RepeatableResponse(
+		$response = new RepeatableResponse(
 			$this->client->request($method, $url, $options),
 			fn () => $this->client->request($method, $url, $options),
 		);
+
+		if ($key) {
+			$this->responses[$key] = $response;
+		} else {
+			$this->responses[] = $response;
+		}
+
+		return $response;
 	}
 
 	/**
@@ -63,6 +71,14 @@ final class HttpClientTransaction implements HttpClientInterface
 
 			$limit--;
 		}
+	}
+
+	/**
+	 * @return RepeatableResponse[]
+	 */
+	public function getResponses(): array
+	{
+		return $this->responses;
 	}
 
 }

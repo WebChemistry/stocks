@@ -12,7 +12,6 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Utilitte\Asserts\ArrayTypeAssert;
 use Utilitte\Asserts\TypeAssert;
-use WebChemistry\Stocks\Async\AsyncArrayRequest;
 use WebChemistry\Stocks\Collection\SymbolCollection;
 use WebChemistry\Stocks\Enum\PeriodEnum;
 use WebChemistry\Stocks\Enum\TimeSeriesTypeEnum;
@@ -25,6 +24,7 @@ use WebChemistry\Stocks\Result\FinancialInterface;
 use WebChemistry\Stocks\Result\Fmp\Financial;
 use WebChemistry\Stocks\Result\Fmp\HistoricalPrice;
 use WebChemistry\Stocks\Result\Fmp\Quote;
+use WebChemistry\Stocks\Result\Fmp\Rating;
 use WebChemistry\Stocks\Result\Fmp\RealtimePrice;
 use WebChemistry\Stocks\Result\Fmp\Symbol;
 use WebChemistry\Stocks\Result\Fmp\TimeSeries;
@@ -104,6 +104,28 @@ final class FmpStockClient implements StockClientInterface
 	)
 	{
 		$this->client = $client ?? HttpClient::create();
+	}
+
+	/**
+	 * @param string[]|string $symbols
+	 * @return SymbolCollection<Rating>
+	 */
+	public function rating(array|string $symbols): SymbolCollection
+	{
+		$transaction = $this->createTransaction();
+
+		foreach ((array) $symbols as $symbol) {
+			$transaction->request('GET', (string) $this->createUrl('rating', $symbol), key: $symbol);
+		}
+
+		$transaction->commit();
+
+		$collection = [];
+		foreach ($transaction->getResponses() as $symbol => $response) {
+			$collection[$symbol] = new Rating($response->toArray());
+		}
+
+		return new SymbolCollection($collection);
 	}
 
 	public function profiles(): Reader
