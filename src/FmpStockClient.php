@@ -122,7 +122,11 @@ final class FmpStockClient implements StockClientInterface
 
 		$collection = [];
 		foreach ($transaction->getResponses() as $symbol => $response) {
-			$collection[$symbol] = new Rating($response->toArray());
+			$array = $response->toArray()[0] ?? null;
+
+			if ($array) {
+				$collection[$symbol] = new Rating($array);
+			}
 		}
 
 		return new SymbolCollection($collection);
