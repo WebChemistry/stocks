@@ -155,6 +155,7 @@ final class FmpStockClient implements StockClientInterface
 		$response = $this->client->request(
 			'GET',
 			(string) $this->createUrl('batch-request-end-of-day-prices', apiUrl: self::API_URL_V4)
+				->setQueryParameter('date', $dateTime->format('Y-m-d'))
 		);
 
 		$reader = Reader::createFromString($response->getContent());
