@@ -81,4 +81,15 @@ final class HttpClientTransaction implements HttpClientInterface
 		return $this->responses;
 	}
 
+	/**
+	 * @param mixed[] $options
+	 */
+	public function withOptions(array $options): static
+	{
+		$cloned = clone $this;
+		$cloned->client = $cloned->client->withOptions($options);
+
+		return $this;
+	}
+
 }
