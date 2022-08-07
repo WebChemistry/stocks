@@ -2,7 +2,7 @@
 
 namespace WebChemistry\Stocks\Result\Fmp;
 
-use Utilitte\Asserts\ArrayTypeAssert;
+use Typertion\Php\ArrayTypeAssert;
 
 final class HistoricalPriceWithSymbol extends HistoricalPrice
 {

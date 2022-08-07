@@ -4,8 +4,8 @@ namespace WebChemistry\Stocks\Result\Fmp;
 
 use DateTime;
 use DateTimeInterface;
-use Utilitte\Asserts\ArrayTypeAssert;
-use Utilitte\Asserts\TypeAssert;
+use Typertion\Php\ArrayTypeAssert;
+use Typertion\Php\TypeAssert;
 use WebChemistry\Stocks\Result\ArrayResult;
 use WebChemistry\Stocks\Result\TimeSeriesInterface;
 

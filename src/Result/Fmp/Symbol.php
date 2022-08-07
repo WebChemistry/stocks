@@ -2,8 +2,8 @@
 
 namespace WebChemistry\Stocks\Result\Fmp;
 
-use Utilitte\Asserts\ArrayTypeAssert;
-use Utilitte\Asserts\TypeAssert;
+use Typertion\Php\ArrayTypeAssert;
+use Typertion\Php\TypeAssert;
 use WebChemistry\Stocks\Enum\TickerTypeEnum;
 use WebChemistry\Stocks\Exception\StockClientException;
 use WebChemistry\Stocks\Result\ArrayResult;

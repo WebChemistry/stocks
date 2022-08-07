@@ -2,8 +2,8 @@
 
 namespace WebChemistry\Stocks\Helper;
 
-use Utilitte\Asserts\ArrayTypeAssert;
-use Utilitte\Asserts\TypeAssert;
+use Typertion\Php\ArrayTypeAssert;
+use Typertion\Php\TypeAssert;
 use WebChemistry\Stocks\Collection\SymbolCollection;
 use WebChemistry\Stocks\Exception\StockClientNoDataException;
 

@@ -8,7 +8,7 @@ use IteratorAggregate;
 use LogicException;
 use Nette\Utils\Arrays;
 use OutOfBoundsException;
-use Utilitte\Asserts\TypeAssert;
+use Typertion\Php\TypeAssert;
 use WebChemistry\Stocks\Result\ArrayResultInterface;
 
 /**

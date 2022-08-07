@@ -2,7 +2,7 @@
 
 namespace WebChemistry\Stocks\Result\Fmp;
 
-use Utilitte\Asserts\TypeAssert;
+use Typertion\Php\TypeAssert;
 use WebChemistry\Stocks\Result\ArrayResult;
 use WebChemistry\Stocks\Result\FinancialInterface;
 

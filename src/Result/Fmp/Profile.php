@@ -2,7 +2,7 @@
 
 namespace WebChemistry\Stocks\Result\Fmp;
 
-use Utilitte\Asserts\ArrayTypeAssert;
+use Typertion\Php\ArrayTypeAssert;
 use WebChemistry\Stocks\Result\ArrayResult;
 
 final class Profile extends ArrayResult
