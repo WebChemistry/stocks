@@ -4,7 +4,7 @@
         "php": ">= 8.0",
         "symfony/http-client": "^6.0",
         "myclabs/php-enum": "^1.8",
-        "nette/utils": "^3.2",
+        "nette/utils": "^3.2 || ^4.0",
         "nette/http": "^3.1",
         "utilitte/php": "^1.5.0",
         "league/csv": "^9.8",
